@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>sample</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./chartjs/Chart.bundle.js"></script>
+    <script src="./rx/rx.all.js"></script>
+    <script src="./components/all.js"></script>
+</head>
+
+<body>
+<div class='container'><div class='row'><div id='select' class='.col-md-12'></div></div>
+
+<div class='row'><div id='pie' class='.col-md-12'></div>
+<div class='row'><div id='bar2' class='.col-md-12'></div>
+</div></div>
+
+<script>
+    var components = new Array();
+
+    var extractparameters = function(component, event) {
+        console.log('extractparameters: %s', component.parameters);
+        var params = '{"name": "' + component.dataset + '","parameters": [';
+        var oParam = new Array();
+        for (index in component.parameters) {
+            var parameter = component.parameters[index];
+            var provider = components['chart' + parameter.provider];
+            var value = provider.selectedValue(event);
+            oParam[oParam.length] = '{"name" : "' + parameter.name + '", "value" : "' + value + '"}';
+        }
+        params += oParam.join(",");
+        params +=']}';
+
+
+        return params;
+    };
+
+    window.onload = function() {
+        var select = new CDynamicSelect('chartselect', 'select', ['pie'], 'select', []);
+components['chartselect'] = select;
+const observableselect = Rx.Observable.fromEvent($('#chartselect'), 'change');
+
+var pie = new CPie('chartpie', 'pie', ['bar2'], 'pie', [new Parameter('select', 'select')]);
+components['chartpie'] = pie;
+const observablepie = Rx.Observable.fromEvent($('#chartpie'), 'click');
+
+var bar2 = new CBar('chartbar2', 'bar2', [], 'pie', [new Parameter('select', 'pie')]);
+components['chartbar2'] = bar2;
+const observablebar2 = Rx.Observable.fromEvent($('#chartbar2'), 'click');
+
+        const all = Rx.Observable.merge(observableselect, observablepie, observablebar2);
+
+        all.subscribe(function (event) {
+            console.log('active component: %s', event.currentTarget.id);
+            var component = components['chart' + components[event.currentTarget.id].childs[0]];
+            console.log('active child: %s', component.id);
+            var params = extractparameters(component, event);
+            $.ajax({
+               type: "POST",
+               url: "http://localhost:9090/datas",
+               contentType: 'application/json; charset=utf-8',
+               data: params,
+               success: function(resp){
+                   // we have the response
+                    component.refresh(resp);
+                },
+               error: function(e){
+                 console.log('unable to retreive datas ' + e);
+               }
+             });
+
+          },
+          function (err) {
+            console.log('Error: %s', err);
+          },
+          function () {
+            console.log('Completed');
+          });
+    };
+
+</script>
+</body>
+
+</html>

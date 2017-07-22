@@ -1,0 +1,96 @@
+{
+  "name": "sample",
+  "nbLines": "2",
+  "nbMaxColumns": "1",
+  "javaScripts": [
+    {
+      "url": "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"
+    },
+    {
+      "url": "./chartjs/Chart.bundle.js"
+    },
+    {
+      "url": "./rx/rx.all.js"
+    },
+    {
+      "url": "./components/all.js"
+    }
+  ],
+  "css": [
+    {
+      "url": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    }
+  ],
+  "lines": [
+    {
+      "id": "line1",
+      "index": "1",
+      "nbColumns": "1",
+      "components": [
+        {
+          "id": "select",
+          "index": "1",
+          "renderFunction": "CDynamicSelect",
+          "event": "change",
+          "dataset": "select",
+          "childs": [
+            "pie",
+            "bar"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "line2",
+      "index": "2",
+      "nbColumns": "2",
+      "components": [
+        {
+          "id": "pie",
+          "index": "1",
+          "renderFunction": "CPie",
+          "event": "click",
+          "dataset": "pie",
+          "childs": [
+            "bar"
+          ],
+          "parameters": [
+            {
+              "name": "select",
+              "provider": "select"
+            }
+          ],
+          "options" : [
+            {
+              "name" : "colors",
+              "value" : "['#3f51b5', '#c5cae9', '#80cbc4']"
+            }
+          ]
+        },
+        {
+          "id": "bar",
+          "index": "2",
+          "renderFunction": "CBar",
+          "event": "click",
+          "dataset": "bar",
+          "parameters": [
+            {
+              "name": "select",
+              "provider": "select"
+            },
+            {
+              "name": "pie",
+              "provider": "pie"
+            }
+          ],
+          "options" : [
+            {
+              "name" : "colors",
+              "value" : "['#3f51b5', '#c5cae9', '#80cbc4']"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

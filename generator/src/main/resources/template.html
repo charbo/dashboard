@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>${title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    ${css}
+    ${scripts}
+</head>
+
+<body>
+${layout}
+
+<script>
+    var components = new Array();
+
+    var extractparameters = function(component, event) {
+        console.log('extractparameters: %s', component.parameters);
+        var params = '{"name": "' + component.dataset + '","parameters": [';
+        var oParam = new Array();
+        for (index in component.parameters) {
+            var parameter = component.parameters[index];
+            var provider = components['chart' + parameter.provider];
+            var value = provider.selectedValue(event);
+            oParam[oParam.length] = '{"name" : "' + parameter.name + '", "value" : "' + value + '"}';
+        }
+        params += oParam.join(",");
+        params +=']}';
+
+
+        return params;
+    };
+
+    var callServer = function(name, event) {
+        var component = components['chart' + name];
+
+        var params = extractparameters(component, event);
+        $.ajax({
+               type: "POST",
+               url: "http://localhost:9090/datas",
+               contentType: 'application/json; charset=utf-8',
+               data: params,
+               success: function(resp){
+                   // we have the response
+                    component.refresh(resp);
+                },
+               error: function(e){
+                 console.log('unable to retreive datas ' + e);
+               }
+             });
+    }
+
+    window.onload = function() {
+        ${components}
+
+        const all = Rx.Observable.merge(${listObservables});
+
+        all.subscribe(function (event) {
+           components[event.currentTarget.id].childs.forEach(function(name){console.log("call server for " + name);callServer(name, event)});
+          },
+          function (err) {
+            console.log('Error: %s', err);
+          },
+          function () {
+            console.log('Completed');
+          });
+    };
+
+</script>
+</body>
+
+</html>

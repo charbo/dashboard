@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Pie Chart</title>
+    <script src="./chartjs/Chart.bundle.js"></script>
+    <script src="./jquery/jquery.js"></script>
+    <script src="./rx/rx.all.js"></script>
+    <script src="./components/all.js"></script>
+</head>
+
+<body>
+    <div id="select">
+    
+    </div>
+    <div id="canvas-holder" style="width:40%; border: 1px solid black;">
+        
+    </div>
+
+    <script>
+    var components = new Array();
+
+    window.onload = function() {
+ 
+        var oPie = new CPie("chart-area", "canvas-holder");
+        components["chart-area"] = oPie;
+        
+        var oSelect = new CSelect("selectList", "select");
+        components["selectList"] = oSelect;
+        oSelect.create();
+        
+        const source = Rx.Observable.fromEvent($('#chart-area'), 'click');
+        const selectSource = Rx.Observable.fromEvent($('#selectList'), 'change');
+        const all = Rx.Observable.merge(source, selectSource);
+        
+        all.subscribe(function (x) {
+            var component = components[components[x.currentTarget.id].childs[0]];
+            $.ajax({  
+               type: "GET",  
+               url: "http://localhost:8080/datas",  
+               contentType: 'application/json; charset=utf-8',
+               success: function(resp){  
+                   // we have the response
+                    component.refresh(resp);                   
+                },  
+               error: function(e){  
+                 console.log('unable to retreive datas ' + e); 
+               }  
+             });
+            
+          },
+          function (err) {
+            console.log('Error: %s', err);
+          },
+          function () {
+            console.log('Completed');
+          });
+        
+        /* var subscription = source.subscribe(
+          function (x) {
+            console.log('Next: Clicked!');
+            pie.data.datasets[0].data = [10, 20, 30];
+            pie.update();
+            var activePoints = pie.getElementsAtEvent(x);   
+            var firstPoint = activePoints[0];
+                if (firstPoint != undefined) {
+                var label = pie.data.labels[firstPoint._index];
+                var value = pie.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];                
+                console.log('click pie!' + value);
+            }
+          },
+          function (err) {
+            console.log('Error: %s', err);
+          },
+          function () {
+            console.log('Completed');
+          });
+        
+        const inputSource = Rx.Observable.fromEvent($('#inputBrowser'), 'change');
+        
+        var subscription = inputSource.subscribe(
+          function (x) {
+            console.log('Next: change!');
+          },
+          function (err) {
+            console.log('Error: %s', err);
+          },
+          function () {
+            console.log('Completed');
+          });
+          
+        const selectSource = Rx.Observable.fromEvent($('#select'), 'change');
+        
+        var subscription = selectSource.subscribe(
+          function (x) {
+            console.log('Next: select!');
+          },
+          function (err) {
+            console.log('Error: %s', err);
+          },
+          function () {
+            console.log('Completed');
+          });   */      
+         
+    };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+ext.junitJupiterVersion = '5.0.0-M4'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url 'http://maven2.rd.francetelecom.fr/proxy/repository/public' }
+    }
+    dependencies {
+        classpath 'io.spring.gradle:dependency-management-plugin:0.5.7.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE'
+        classpath 'no.nils:wsdl2java:0.10'
+    }
+
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    compileJava.options.encoding = 'UTF-8'
+
+
+
+    test {
+        maxParallelForks = 1
+        minHeapSize = '128m'
+        maxHeapSize = '350m'
+        ignoreFailures = true
+    }
+
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        compile 'org.apache.commons:commons-lang3:3.4'
+        compile 'org.apache.commons:commons-collections4:4.1'
+        compile 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
+
+        // JUnit Jupiter API and TestEngine implementation
+        testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+        testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+
+    }
+}

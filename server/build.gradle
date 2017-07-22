@@ -1,0 +1,31 @@
+apply plugin: 'spring-boot'
+
+ext {
+    springfoxVersion = '2.5.0'
+    jacksonVersion = '2.8.1'
+    powermockVersion = '1.6.5'
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-aop'
+    compile 'org.springframework.boot:spring-boot-starter-tomcat:1.2.1.RELEASE'
+    compile("org.springframework:spring-jdbc")
+    compile("com.h2database:h2")
+}
+
+bootRepackage {
+    enabled = true
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.dashboard.server.Application'
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+

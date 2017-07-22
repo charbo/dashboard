@@ -1,0 +1,65 @@
+{
+  "name": "sample",
+  "nbLines": "2",
+  "nbMaxColumns": "2",
+  "javaScripts": [
+    {
+      "url": "monjs.js"
+    }
+  ],
+  "css": [
+    {
+      "url": "moncss.css"
+    }
+  ],
+  "lines" : [
+    {
+      "id" : "line1",
+      "index": "1",
+      "nbColumns" : "1",
+      "css": "cssLine1",
+      "components" : [
+        {
+          "id" : "component1",
+          "index" : "1",
+          "renderFunction" : "renderComponent1",
+          "css": "cssComponent1",
+          "event" : "click",
+          "dataset" : "dataset11",
+          "childs" : ["component2", "component3"],
+          "parameters" : [
+            {"name" : "name1", "provider" : "provider1"},
+            {"name" : "name2", "provider" : "provider2"}
+          ],
+          "options" : [
+            {
+              "name" : "colors",
+              "value" : "['#F00', '#0F0', '#00F']"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id" : "line2",
+      "index": "2",
+      "nbColumns" : "2",
+      "components" : [
+        {
+          "id" : "component2",
+          "index" : "1",
+          "renderFunction" : "renderComponent2",
+          "dataset" : "dataset21",
+          "event" : "click"
+        },
+        {
+          "id" : "component3",
+          "index" : "2",
+          "dataset" : "dataset22",
+          "renderFunction" : "renderComponent3",
+          "event" : "change"
+        }
+      ]
+    }
+  ]
+}

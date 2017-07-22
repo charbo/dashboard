@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>sample</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./chartjs/Chart.bundle.js"></script>
+    <script src="./rx/rx.all.js"></script>
+    <script src="./components/all.js"></script>
+</head>
+
+<body>
+   <div class='container'>
+        <div class='row'><div id='select' class='.col-md-12'></div></div>
+
+        <div class='row'><div id='pie' class='.col-md-12'></div></div>
+    </div>
+
+<script>
+    var components = new Array();
+    
+   
+
+    window.onload = function() {
+    
+        var select = new CDynamicSelect('chartselect', 'select', ['pie'], 'select', []);
+components['chartselect'] = select;
+const observableselect = Rx.Observable.fromEvent($('#chartselect'), 'change');
+
+var pie = new CPie('chartpie', 'pie', [], "pie", [new Parameter('select', 'select')]);
+components['chartpie'] = pie;
+const observablepie = Rx.Observable.fromEvent($('#chartpie'), 'click');
+
+        const all = Rx.Observable.merge(observableselect, observablepie);
+
+        all.subscribe(function (x) {
+            var component = components['chart' + components[x.currentTarget.id].childs[0]];
+            var params = extractparameters(component);
+            console.log('event from ' + x.currentTarget.id + 'with param ' + params);
+            $.ajax({
+               type: "POST",
+               url: "http://localhost:8080/datas",
+               contentType: 'application/json; charset=utf-8',
+               data: params,
+               success: function(resp){
+                   // we have the response
+                    component.refresh(resp);
+                },
+               error: function(e){
+                 console.log('unable to retreive datas ' + e);
+               }
+             });
+
+          },
+          function (err) {
+            console.log('Error: %s', err);
+          },
+          function () {
+            console.log('Completed');
+          });
+    };
+    </script>
+</body>
+
+</html>
