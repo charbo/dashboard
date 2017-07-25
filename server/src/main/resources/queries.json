@@ -1,0 +1,17 @@
+[
+  {
+    "name": "select",
+    "sql": "SELECT key, value FROM datas",
+    "label": "select"
+  },
+  {
+    "name": "pie",
+    "sql": "SELECT key, value FROM datas where key <> ':select'",
+    "label": "données camenbert"
+  },
+  {
+    "name": "bar",
+    "sql": "SELECT key, value FROM datas where key in (':select', ':pie')",
+    "label": "données bar"
+  }
+]

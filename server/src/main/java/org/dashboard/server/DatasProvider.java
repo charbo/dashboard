@@ -1,6 +1,8 @@
 package org.dashboard.server;
 
 
+import org.dashboard.server.query.Query;
+import org.dashboard.server.query.QueryParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -18,15 +20,13 @@ import java.util.stream.Collectors;
 @RestController
 public class DatasProvider {
 
-  public static final String QUERIES_PROPERTIESS_FILE_NAME = "queries.properties";
-
   private Resource queriesFile;
 
-  private Properties queries;
+  private Map<String, Query> queries;
 
   private JdbcTemplate jdbcTemplate;
 
-  public DatasProvider(JdbcTemplate jdbcTemplate, @Value(value = "classpath:queries.properties") Resource queriesFile) {
+  public DatasProvider(JdbcTemplate jdbcTemplate, @Value(value = "classpath:queries.json") Resource queriesFile) {
     this.jdbcTemplate = jdbcTemplate;
     this.queriesFile = queriesFile;
     initQueries();
@@ -35,8 +35,7 @@ public class DatasProvider {
 
   private void initQueries() {
     try (InputStream stream = queriesFile.getInputStream()) {
-      queries = new Properties();
-      queries.load(stream);
+      queries = QueryParser.parseJSon(stream);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -45,19 +44,22 @@ public class DatasProvider {
   @RequestMapping(value = "/datas",
           produces = MediaType.APPLICATION_JSON_VALUE,
           method = RequestMethod.POST)
-  public List<Data> getDatas(@RequestBody final Query query) {
+  public DataSet getDatas(@RequestBody final Request request) {
+    List<Data> datas = new ArrayList<>();
+    Query query = queries.get(request.getName());
 
-    String sql = queries.getProperty(query.getName());
-
-    for (Parameter parameter : query.getParameters()) {
-      sql = sql.replace(":" + parameter.getName(), parameter.getValue());
+    if (query != null) {
+      String sql = query.getSql();
+      for (Parameter parameter : request.getParameters()) {
+        sql = sql.replace(":" + parameter.getName(), parameter.getValue());
+      }
+      datas = jdbcTemplate.query(
+              sql,
+              (rs, rowNum) -> new Data(rs.getString("key"), rs.getString("value"))
+      );
     }
-    List<Data> datas = jdbcTemplate.query(
-            sql,
-            (rs, rowNum) -> new Data(rs.getString("key"), rs.getString("value"))
-    );
 
-    return datas;
+    return new DataSet(query.getLabel(), datas);
   }
 
 
