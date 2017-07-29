@@ -1,58 +1,66 @@
 package org.dashboard.server.query;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.io.Serializable;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Query implements Serializable {
-    private String name;
-    private String sql;
-    private String label;
+  private String name;
+  private String sql;
+  private Set<String> series = new TreeSet<>();
 
-    public Query() {
-    }
+  public Query() {
+  }
 
-    public Query(String name, String sql, String label) {
-        this.name = name;
-        this.sql = sql;
-        this.label = label;
-    }
+  public Query(String name, String sql, Set<String> series) {
+    this.name = name;
+    this.sql = sql;
+    this.series = series;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getSql() {
-        return sql;
-    }
+  public String getSql() {
+    return sql;
+  }
 
-    public void setSql(String sql) {
-        this.sql = sql;
-    }
+  public void setSql(String sql) {
+    this.sql = sql;
+  }
 
-    public String getLabel() {
-        return label;
-    }
+  public Set<String> getSeries() {
+    return series;
+  }
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
+  public void setSeries(Set<String> series) {
+    this.series = series;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-        Query query = (Query) o;
+    Query query = (Query) o;
 
-        return getName().equals(query.getName());
-    }
+    return getName().equals(query.getName());
+  }
 
-    @Override
-    public int hashCode() {
-        return getName().hashCode();
-    }
+  @Override
+  public int hashCode() {
+    return getName().hashCode();
+  }
+
+  public boolean isSimpleSerie() {
+    return CollectionUtils.isNotEmpty(series) && series.size() == 1;
+  }
 }
 

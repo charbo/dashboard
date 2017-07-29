@@ -9,8 +9,11 @@ ext {
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-aop'
+    compile 'org.springframework.boot:spring-boot-starter-jdbc'
     compile 'org.springframework.boot:spring-boot-starter-tomcat:1.2.1.RELEASE'
-    compile("org.springframework:spring-jdbc")
+    compile 'org.springframework:spring-jdbc'
+//    compile 'mysql:mysql-connector-java'
+
     compile("com.h2database:h2")
 }
 

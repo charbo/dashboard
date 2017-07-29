@@ -29,7 +29,7 @@ function CPie(id, divId, childs, dataset, parameters, opts) {
     };
 
     this.refresh = function(dataset) {
-        var resp = dataset.datas;
+        var resp = dataset[0].datas;
         var values = new Array();
         var labels = new Array();
         for (index in resp) {
@@ -86,7 +86,7 @@ function CBar(id, divId, childs, dataset, parameters, opts) {
     };
 
     this.refresh = function(dataset) {
-        var resp = dataset.datas;
+        var resp = dataset[0].datas;
         var values = new Array();
         var labels = new Array();
         for (index in resp) {

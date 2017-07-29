@@ -34,7 +34,7 @@ function CDynamicSelect(id, divId, childs, dataset) {
     this.dataset = dataset;
     this.chart = this.create();
     this.refresh = function(dataset) {
-        var resp = dataset.datas;
+        var resp = dataset[0].datas;
         var html = '<option>sélectionner</option>';
 
         for (index in resp) {
@@ -43,7 +43,6 @@ function CDynamicSelect(id, divId, childs, dataset) {
             html += '</option>';
         }
 
-        console.log('create CDynamicSelect ' + _this.divId + ' ' + html);
         document.getElementById(_this.id).innerHTML = html;
     }
 
