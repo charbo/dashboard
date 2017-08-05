@@ -1,6 +1,5 @@
 package org.dashboard.bean.component;
 
-import org.dashboard.bean.component.Component;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -9,15 +8,21 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ComponentTest {
 
-  private static final String TWO_CHILDS = "var id = new RenderFunction('chartid', 'id', ['child1', 'child2'], '', []);\n" +
+  private static final String TWO_CHILDS = "var optionsid = new Array();\n" +
+          "\n" +
+          "var id = new RenderFunction('chartid', 'id', ['child1', 'child2'], '', [], optionsid);\n" +
           "components['chartid'] = id;\n" +
           "const observableid = Rx.Observable.fromEvent($('#chartid'), 'click');";
 
-  private static final String DATASET = "var id = new RenderFunction('chartid', 'id', ['child1', 'child2'], 'dataset', []);\n" +
+  private static final String DATASET = "var optionsid = new Array();\n" +
+          "\n" +
+          "var id = new RenderFunction('chartid', 'id', ['child1', 'child2'], new Dataset('dataset', 'url'), [], optionsid);\n" +
           "components['chartid'] = id;\n" +
           "const observableid = Rx.Observable.fromEvent($('#chartid'), 'click');";
 
-  private static  final String NO_CHILD = "var id = new RenderFunction('chartid', 'id', [], '', []);\n" +
+  private static  final String NO_CHILD = "var optionsid = new Array();\n" +
+          "\n" +
+          "var id = new RenderFunction('chartid', 'id', [], '', [], optionsid);\n" +
           "components['chartid'] = id;\n" +
           "const observableid = Rx.Observable.fromEvent($('#chartid'), 'change');";
 
@@ -41,7 +46,7 @@ class ComponentTest {
     component.setEvent("click");
     component.setRenderFunction("RenderFunction");
     component.setChilds(Arrays.asList("child1", "child2"));
-    component.setDataset("dataset");
+    component.setDataset(new Dataset("dataset", "url"));
 
     String result = component.toJavaScript();
     assertEquals(DATASET, result);
@@ -59,11 +64,12 @@ class ComponentTest {
   }
 
   @Test
-  void html_avec_4_columns() {
+  void html_avec_css() {
     Component component = new Component();
     component.setId("id");
+    component.setCss("col-md-3");
 
-    String result = component.toHTML(4);
+    String result = component.toHTML();
     assertEquals(DIV_ID_ID_CLASS_COL_MD_4_DIV, result);
   }
 

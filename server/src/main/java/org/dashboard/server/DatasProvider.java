@@ -31,21 +31,9 @@ public class DatasProvider {
   private JdbcTemplate jdbcTemplate;
 
   public DatasProvider(JdbcTemplate jdbcTemplate, @Value(value = "classpath:queries.json") Resource queriesFile) {
-//    DataSource dataSource = null;
-//    try {
-//      dataSource = DataSourceBuilder.create()
-//              .driverClassName("com.mysql.jdbc.Driver")
-//              .password("root")
-//              .username("root")
-//              .url("jdbc:mysql://localhost/sakila")
-//              .build();
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    }
     this.jdbcTemplate = jdbcTemplate;
     this.queriesFile = queriesFile;
     initQueries();
-    init();
   }
 
   private void initQueries() {

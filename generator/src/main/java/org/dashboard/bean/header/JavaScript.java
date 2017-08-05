@@ -1,6 +1,4 @@
-package org.dashboard.bean;
-
-import java.io.Serializable;
+package org.dashboard.bean.header;
 
 public class JavaScript extends HeaderElement {
   public JavaScript() {

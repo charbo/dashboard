@@ -1,92 +1,243 @@
 {
   "name": "sample",
-  "nbLines": "2",
-  "nbMaxColumns": "1",
+  "title": "VIDEO Club",
+  "description": "Dashboard base on Sakila  Sample Database",
   "javaScripts": [
     {
       "url": "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"
     },
     {
+      "url": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+    },
+    {
+      "url": "./c3js/d3.v3.js"
+    },
+    {
+      "url": "./c3js/c3.js"
+    },
+    {
       "url": "./chartjs/Chart.bundle.js"
     },
     {
-      "url": "./rx/rx.all.js"
+      "url": "./components/ccommun.js"
     },
     {
-      "url": "./components/all.js"
+      "url": "./components/chtml.js"
+    },
+    {
+      "url": "./components/cchartjs.js"
+    },
+    {
+      "url": "./components/cc3js.js"
+    },
+    {
+      "url": "./rx/rx.lite.js"
+    },
+    {
+      "url": "./chartjs/Chart.bundle.js"
     }
   ],
   "css": [
     {
       "url": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    },
+    {
+      "url": "./css/test.css"
+    },
+    {
+      "url": "./c3js/c3.css"
+    },
+    {
+      "url": "./css/default.css"
+    },
+    {
+      "url": "./css/boostraptheme.css"
+    }
+  ],
+  "groups": [
+    {
+      "linkedId" : "titlerental",
+      "label" : "Rental",
+      "index" : "1"
+    },
+    {
+      "linkedId" : "titlefinancial",
+      "label" : "Financial",
+      "index" : "2"
     }
   ],
   "lines": [
     {
-      "id": "line1",
+      "id": "titlerental",
       "index": "1",
-      "nbColumns": "1",
+      "css" : "container-fluid",
       "components": [
         {
-          "id": "select",
+          "id": "textrental",
           "index": "1",
-          "renderFunction": "CDynamicSelect",
-          "event": "change",
-          "dataset": "select",
-          "childs": [
-            "pie",
-            "bar"
+          "css" : "text-center title",
+          "renderFunction": "CDynamicText",
+          "options": [
+            {
+              "name" : "text",
+              "value" : "'all rental by month'"
+            }
           ]
         }
       ]
     },
     {
-      "id": "line2",
+      "id": "rental",
       "index": "2",
-      "nbColumns": "2",
+      "css" : "container-fluid",
       "components": [
         {
-          "id": "pie",
+          "id": "multi",
+          "loadOnStartUp" : "true",
           "index": "1",
-          "renderFunction": "CPie",
+          "css" : "col-sm-12",
+          "renderFunction": "C3MultiBar",
           "event": "click",
-          "dataset": "pie",
+          "dataset": {"name": "rental", "url" : "http://localhost:9090/datas"},
           "childs": [
-            "bar"
-          ],
+            "img",
+            "category"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bymonth",
+      "index": "3",
+      "css" : "container-fluid bg-grey",
+      "components": [
+        {
+          "id": "img",
+          "index": "1",
+          "renderFunction": "CDynamicImage",
+          "css" : "col-sm-4",
+          "dataset": {"name": "month", "url" : "http://localhost:9090/datas"},
+          "childs": [],
           "parameters": [
             {
-              "name": "select",
-              "provider": "select"
+              "name": "month",
+              "provider": "multi"
             }
           ],
           "options" : [
             {
-              "name" : "colors",
-              "value" : "['#3f51b5', '#c5cae9', '#80cbc4']"
+              "name" : "conditions",
+              "value" : "['${value}<10|red', '${value}>=10|green']"
+            },
+            {
+              "name" : "showvalue",
+              "value" : "true"
             }
           ]
         },
         {
-          "id": "bar",
+          "id": "category",
           "index": "2",
-          "renderFunction": "CBar",
-          "event": "click",
-          "dataset": "bar",
+          "renderFunction": "C3Bar",
+          "css" : "col-sm-8",
+          "dataset": {"name": "category", "url" : "http://localhost:9090/datas"},
           "parameters": [
             {
-              "name": "select",
-              "provider": "select"
-            },
-            {
-              "name": "pie",
-              "provider": "pie"
+              "name": "month",
+              "provider": "multi"
             }
           ],
-          "options" : [
+          "options" : []
+        }
+      ]
+    },
+    {
+      "id": "titlefinancial",
+      "index": "4",
+      "css" : "container-fluid",
+      "components": [
+        {
+          "id": "textfinancial",
+          "index": "1",
+          "css" : "text-center title",
+          "renderFunction": "CDynamicText",
+          "options": [
             {
-              "name" : "colors",
-              "value" : "['#3f51b5', '#c5cae9', '#80cbc4']"
+              "name" : "text",
+              "value" : "'payement by month'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "financial",
+      "index": "5",
+      "css" : "container-fluid bottomlabel",
+      "components": [
+        {
+          "id": "payment",
+          "event": "click",
+          "loadOnStartUp" : "true",
+          "index": "1",
+          "renderFunction": "C3Line",
+          "css" : "col-sm-6",
+          "dataset": {"name": "payment", "url" : "http://localhost:9090/datas"},
+          "childs": ["paymentbydays"],
+          "parameters": [],
+          "options" : []
+        },
+        {
+          "id": "paymentbydays",
+          "index": "2",
+          "renderFunction": "C3Donut",
+          "css" : "col-sm-6",
+          "dataset": {"name": "paymentdays", "url" : "http://localhost:9090/datas"},
+          "childs": [],
+          "parameters": [
+            {
+              "name": "month",
+              "provider": "payment"
+            }
+          ],
+          "options" : []
+        }
+      ]
+    },
+    {
+      "id": "labelfinancial",
+      "index": "6",
+      "css" : "container-fluid labelline",
+      "components": [
+        {
+          "id": "textfinancialbymonth",
+          "index": "1",
+          "css" : "col-sm-6 text-center",
+          "renderFunction": "CDynamicText",
+          "options": [
+            {
+              "name" : "text",
+              "value" : "'rental by month'"
+            },
+            {
+              "name" : "css",
+              "value" : "'subtitle'"
+            }
+          ]
+        },
+        {
+          "id": "textfinancialbyday",
+          "index": "2",
+          "css" : "col-sm-6 text-center",
+          "renderFunction": "CDynamicText",
+          "options": [
+            {
+              "name" : "text",
+              "value" : "'rental by day of week'"
+            },
+            {
+              "name" : "css",
+              "value" : "'subtitle'"
             }
           ]
         }

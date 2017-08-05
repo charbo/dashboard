@@ -1,23 +1,13 @@
-function CSelect(id, divId, childs) {
-    this.id = id;
-    this.create = function() {
-        document.getElementById(divId).innerHTML = '<select id="' + id + '">"<option> option 1</option><option> option 2</option></select>';
-    }
-    this.childs = childs;
-    this.chart = this.create();
-}
-
-
 function CDynamicSelect(id, divId, childs, dataset) {
     var _this = this;
     this.id = id;
     this.divId = divId;
     this.create = function() {
         document.getElementById(_this.divId).innerHTML = '<select id="' + _this.id + '" class="form-control"></select>';
-        var params = '{"name": "' + this.dataset + '","parameters": []}';
+        var params = '{"name": "' + this.dataset.name + '","parameters": []}';
         $.ajax({
             type: "POST",
-            url: "http://localhost:9090/datas",
+            url: this.dataset.url,
             contentType: 'application/json; charset=utf-8',
             data: params,
             success: function(resp){
@@ -51,4 +41,72 @@ function CDynamicSelect(id, divId, childs, dataset) {
         return e.options[e.selectedIndex].value;
     }
 }
+
+
+function CDynamicImage(id, divId, childs, dataset, parameters, opts) {
+    Component.call(this, id, divId, childs, dataset, parameters, opts);
+    this.create = function() {
+
+    }
+
+    this.refresh = function(dataset) {
+        var resp = dataset[0].datas;
+        var value = resp[0].value;
+
+        var conditions = this.opts['conditions'];
+        var css = '';
+        for (index in conditions) {
+            var condition = conditions[index];
+            var test = condition.split('|')[0];
+            test = test.replace('${value}', value);
+            if (eval(test)) {
+                css = condition.split('|')[1];
+            }
+        }
+        var showvalue = this.opts['showvalue'];
+        var html = '<div class="row"><div id="' + this.id + '" class="col-md-6 ' + css + '">&nbsp</div>';
+        if (showvalue != undefined) {
+            html += '<div class="col-md-6">' + value + '</div>';
+        }
+        html += '</div>';
+
+        document.getElementById(divId).innerHTML = html;
+    }
+
+    this.chart = this.create();
+}
+
+CDynamicImage.prototype = Object.create(Component.prototype);
+CDynamicImage.prototype.constructor = CDynamicImage;
+
+
+
+function CDynamicText(id, divId, childs, dataset, parameters, opts) {
+    Component.call(this, id, divId, childs, dataset, parameters, opts);
+    this.create = function() {
+        if (opts['text'] != undefined) {
+            var css = '';
+             if (opts['css'] != undefined) {
+                css = ' class="' + opts['css'] + '" ';
+             }
+            document.getElementById(divId).innerHTML = '<p' + css + '>' + opts['text'] + '</p>';
+        }
+    }
+
+    this.refresh = function(dataset) {
+        var resp = dataset[0].datas;
+        var value = resp[0].value;
+
+        var css = '';
+        if (opts['css'] != undefined) {
+            css = ' class="' + opts['css'] + '" ';
+        }
+        document.getElementById(divId).innerHTML = '<p' + css + '>' + value + '</p>';
+    }
+
+    this.chart = this.create();
+}
+
+CDynamicText.prototype = Object.create(Component.prototype);
+CDynamicText.prototype.constructor = CDynamicText;
 

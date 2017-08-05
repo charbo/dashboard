@@ -2,16 +2,31 @@
   {
     "name": "select",
     "sql": "SELECT key, value FROM datas",
-    "label": "select"
+    "series": ["select"]
   },
   {
     "name": "pie",
     "sql": "SELECT key, value FROM datas where key <> ':select'",
-    "label": "données camenbert"
+    "series": ["données camenbert"]
   },
   {
     "name": "bar",
     "sql": "SELECT key, value FROM datas where key in (':select', ':pie')",
-    "label": "données bar"
+    "series": ["données bar"]
+  },
+  {
+    "name": "names",
+    "sql": "SELECT last_name as 'key', 1 as value FROM customer",
+    "series": ["noms"]
+  },
+  {
+    "name": "amount",
+    "sql": "SELECT MONTHNAME(payment_date) as 'key', sum(amount) as value FROM payment p inner join customer c on c.customer_id = p.customer_id where c.last_name = ':name' group by MONTHNAME(payment_date) order by MONTH(payment_date)",
+    "series": ["amount"]
+  },
+  {
+    "name": "rental",
+    "sql": "SELECT 'less2' as serie, mname AS'key', COUNT(*) AS value FROM ( SELECT MONTHNAME(rental_date) AS mname, customer_id, COUNT(*) FROM rental GROUP BY MONTHNAME(rental_date), customer_id HAVING COUNT(*) <= 2 ORDER BY MONTH(rental_date) ) VIEW GROUP BY mname UNION SELECT 'less5' as serie, mname AS'key', COUNT(*) AS value FROM ( SELECT MONTHNAME(rental_date) AS mname, customer_id, COUNT(*) FROM rental GROUP BY MONTHNAME(rental_date), customer_id HAVING COUNT(*) < 5 ORDER BY MONTH(rental_date) ) VIEW GROUP BY mname UNION SELECT 'more5' as serie, mname AS'key', COUNT(*) AS value FROM ( SELECT MONTHNAME(rental_date) AS mname, customer_id, COUNT(*) FROM rental GROUP BY MONTHNAME(rental_date), customer_id HAVING COUNT(*) >= 5 ORDER BY MONTH(rental_date) ) VIEW GROUP BY mname",
+    "series": ["less2", "less5", "more5"]
   }
 ]

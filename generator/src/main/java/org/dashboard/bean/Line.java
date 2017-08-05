@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 public class Line extends CustomizableItem implements Serializable, Comparable<Line> {
   private String id;
   private Integer index;
-  private Integer nbColumns;
   private Set<Component> components = new TreeSet<>();
 
   public String getId() {
@@ -27,14 +26,6 @@ public class Line extends CustomizableItem implements Serializable, Comparable<L
 
   public void setIndex(Integer index) {
     this.index = index;
-  }
-
-  public Integer getNbColumns() {
-    return nbColumns;
-  }
-
-  public void setNbColumns(Integer nbColumns) {
-    this.nbColumns = nbColumns;
   }
 
   public Set<Component> getComponents() {
@@ -66,10 +57,10 @@ public class Line extends CustomizableItem implements Serializable, Comparable<L
   }
 
   public String toHTML() {
-    return components.stream().map(component -> component.toHTML(nbColumns)).collect(Collectors.joining("", getPrefix(), "</div>"));
+    return components.stream().map(component -> component.toHTML()).collect(Collectors.joining("", getPrefix(), "</div></div>"));
   }
 
   private String getPrefix() {
-    return "<div class='row" + getHtmlCss() + "'>";
+    return "<div id='" + id + "' class='" + getCss() + "'><div class='row'>";
   }
 }

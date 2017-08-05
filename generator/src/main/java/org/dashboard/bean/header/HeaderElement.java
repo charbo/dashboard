@@ -1,4 +1,4 @@
-package org.dashboard.bean;
+package org.dashboard.bean.header;
 
 import java.io.Serializable;
 

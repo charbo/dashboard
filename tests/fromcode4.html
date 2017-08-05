@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>sample</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/test.css">
+    <link rel="stylesheet" type="text/css" href="./c3js/c3.css">
+    <link rel="stylesheet" type="text/css" href="./css/default.css">
+    <link rel="stylesheet" type="text/css" href="./css/boostraptheme.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="./c3js/d3.v3.js"></script>
+    <script src="./c3js/c3.js"></script>
+    <script src="./chartjs/Chart.bundle.js"></script>
+    <script src="./components/ccommun.js"></script>
+    <script src="./components/chtml.js"></script>
+    <script src="./components/cchartjs.js"></script>
+    <script src="./components/cc3js.js"></script>
+    <script src="./rx/rx.lite.js"></script>
+    <script src="./chartjs/Chart.bundle.js"></script>
+</head>
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#myPage">Logo</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href='#titlerental'>Rental</a></li>
+
+                <li><a href='#titlefinancial'>Financial</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="jumbotron text-center">
+    <h1>VIDEO Club</h1>
+    <p>Dashboard base on Sakila  Sample Database</p>
+</div>
+
+<div id='titlerental' class='container-fluid'><div class='row'><div id='textrental' class='text-center title'></div></div></div>
+
+<div id='rental' class='container-fluid'><div class='row'><div id='multi' class='col-sm-12'></div></div></div>
+
+<div id='bymonth' class='container-fluid bg-grey'><div class='row'><div id='img' class='col-sm-4'></div><div id='category' class='col-sm-8'></div></div></div>
+
+<div id='titlefinancial' class='container-fluid'><div class='row'><div id='textfinancial' class='text-center title'></div></div></div>
+
+<div id='financial' class='container-fluid bottomlabel'><div class='row'><div id='payment' class='col-sm-6'></div><div id='paymentbydays' class='col-sm-6'></div></div></div>
+
+<div id='labelfinancial' class='container-fluid labelline'><div class='row'><div id='textfinancialbymonth' class='col-sm-6 text-center'></div><div id='textfinancialbyday' class='col-sm-6 text-center'></div></div></div>
+
+<footer class="container-fluid text-center">
+    <a href="#myPage" title="To Top">
+        <span class="glyphicon glyphicon-chevron-up"></span>
+    </a>
+</footer>
+<script>
+    var components = new Array();
+
+    var extractparameters = function(component, event) {
+        console.log('extractparameters: %s', component.parameters);
+        var params = '{"name": "' + component.dataset.name + '","parameters": [';
+        var oParam = new Array();
+        for (index in component.parameters) {
+            var parameter = component.parameters[index];
+            var provider = components['chart' + parameter.provider];
+            var value = provider.selectedValue(event);
+            oParam[oParam.length] = '{"name" : "' + parameter.name + '", "value" : "' + value + '"}';
+        }
+        params += oParam.join(",");
+        params +=']}';
+
+
+        return params;
+    };
+
+    var callServer = function(name, event) {
+        var component = components['chart' + name];
+
+        var params = extractparameters(component, event);
+        $.ajax({
+               type: "POST",
+               url: component.dataset.url,
+               contentType: 'application/json; charset=utf-8',
+               data: params,
+               success: function(resp){
+                   // we have the response
+                    component.refresh(resp);
+                },
+               error: function(e){
+                 console.log('unable to retreive datas ' + e);
+               }
+             });
+    }
+
+    window.onload = function() {
+        var optionstextrental = new Array();
+optionstextrental['text'] = 'all rental by month';
+var textrental = new CDynamicText('charttextrental', 'textrental', [], '', [], optionstextrental);
+components['charttextrental'] = textrental;
+
+
+var optionsmulti = new Array();
+
+var multi = new C3MultiBar('chartmulti', 'multi', ['img', 'category'], new Dataset('rental', 'http://localhost:9090/datas'), [], optionsmulti);
+components['chartmulti'] = multi;
+const observablemulti = Rx.Observable.fromEvent($('#chartmulti'), 'click');
+
+var optionsimg = new Array();
+optionsimg['conditions'] = ['${value}<10|red', '${value}>=10|green'];
+optionsimg['showvalue'] = true;
+var img = new CDynamicImage('chartimg', 'img', [], new Dataset('month', 'http://localhost:9090/datas'), [new Parameter('month', 'multi')], optionsimg);
+components['chartimg'] = img;
+
+
+var optionscategory = new Array();
+
+var category = new C3Bar('chartcategory', 'category', [], new Dataset('category', 'http://localhost:9090/datas'), [new Parameter('month', 'multi')], optionscategory);
+components['chartcategory'] = category;
+
+
+var optionstextfinancial = new Array();
+optionstextfinancial['text'] = 'payement by month';
+var textfinancial = new CDynamicText('charttextfinancial', 'textfinancial', [], '', [], optionstextfinancial);
+components['charttextfinancial'] = textfinancial;
+
+
+var optionspayment = new Array();
+
+var payment = new C3Line('chartpayment', 'payment', ['paymentbydays'], new Dataset('payment', 'http://localhost:9090/datas'), [], optionspayment);
+components['chartpayment'] = payment;
+const observablepayment = Rx.Observable.fromEvent($('#chartpayment'), 'click');
+
+var optionspaymentbydays = new Array();
+
+var paymentbydays = new C3Donut('chartpaymentbydays', 'paymentbydays', [], new Dataset('paymentdays', 'http://localhost:9090/datas'), [new Parameter('month', 'payment')], optionspaymentbydays);
+components['chartpaymentbydays'] = paymentbydays;
+
+
+var optionstextfinancialbymonth = new Array();
+optionstextfinancialbymonth['css'] = 'subtitle';
+optionstextfinancialbymonth['text'] = 'rental by month';
+var textfinancialbymonth = new CDynamicText('charttextfinancialbymonth', 'textfinancialbymonth', [], '', [], optionstextfinancialbymonth);
+components['charttextfinancialbymonth'] = textfinancialbymonth;
+
+
+var optionstextfinancialbyday = new Array();
+optionstextfinancialbyday['css'] = 'subtitle';
+optionstextfinancialbyday['text'] = 'rental by day of week';
+var textfinancialbyday = new CDynamicText('charttextfinancialbyday', 'textfinancialbyday', [], '', [], optionstextfinancialbyday);
+components['charttextfinancialbyday'] = textfinancialbyday;
+
+
+        const all = Rx.Observable.merge(observablemulti, observablepayment);
+
+        all.subscribe(function (event) {
+           components[event.currentTarget.id].childs.forEach(function(name){console.log("call server for " + name);callServer(name, event)});
+          },
+          function (err) {
+            console.log('Error: %s', err);
+          },
+          function () {
+            console.log('Completed');
+          });
+
+         callServer('multi', null);
+callServer('payment', null);
+    };
+
+    $(document).ready(function(){
+  // Add smooth scrolling to all links in navbar + footer link
+  $(".navbar a, footer a[href='#myPage']").on('click', function(event) {
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
+
+      // Store hash
+      var hash = this.hash;
+
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (900) specifies the number of milliseconds it takes to scroll to the specified area
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 900, function(){
+
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
+  });
+
+  $(window).scroll(function() {
+    $(".slideanim").each(function(){
+      var pos = $(this).offset().top;
+
+      var winTop = $(window).scrollTop();
+        if (pos < winTop + 600) {
+          $(this).addClass("slide");
+        }
+    });
+  });
+})
+
+</script>
+</body>
+
+</html>

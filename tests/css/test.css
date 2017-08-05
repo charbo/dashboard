@@ -1,0 +1,37 @@
+.red {
+    background-image: url("./img/sign_warning.png");
+    background-repeat:no-repeat;
+    background-position:50% 50%;
+    width: 128px;
+    height: 128px;
+}
+.green {
+    background-image: url("./img/plus_add_green.png");
+    background-repeat:no-repeat;
+    background-position:50% 50%;
+    width: 128px;
+    height: 128px;
+}
+
+.title {
+    font-size: 24px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 30px;
+    color: #f4511e;
+    background-color: #f6f6f6;
+}
+
+.subtitle {
+    font-size: 18px;
+    text-transform: uppercase;
+    color: #f4511e;
+    background-color: #f6f6f6;
+}
+
+.labelline {
+    padding-top: 0 !important;
+}
+.bottomlabel {
+    padding-bottom: 0 !important;
+}

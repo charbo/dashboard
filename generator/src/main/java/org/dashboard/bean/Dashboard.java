@@ -2,23 +2,24 @@ package org.dashboard.bean;
 
 
 import org.dashboard.bean.component.Component;
+import org.dashboard.bean.header.Css;
+import org.dashboard.bean.header.JavaScript;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Dashboard implements Serializable {
   private String name;
-  private Integer nbLines;
-  private Integer nbMaxColumns;
-  private Set<JavaScript> javaScripts = new HashSet<>();
-  private Set<Css> css = new HashSet<>();
+  private String title;
+  private String description;
+  private List<JavaScript> javaScripts = new ArrayList<>();
+  private List<Css> css = new ArrayList<>();
   private Set<Line> lines = new TreeSet<>();
+  private List<Group> groups = new ArrayList<>();
 
   public String getName() {
     return name;
@@ -28,35 +29,35 @@ public class Dashboard implements Serializable {
     this.name = name;
   }
 
-  public Integer getNbLines() {
-    return nbLines;
+  public String getTitle() {
+    return title != null ? title : "";
   }
 
-  public void setNbLines(Integer nbLines) {
-    this.nbLines = nbLines;
+  public void setTitle(String title) {
+    this.title = title;
   }
 
-  public Integer getNbMaxColumns() {
-    return nbMaxColumns;
+  public String getDescription() {
+    return description != null ? description : "";
   }
 
-  public void setNbMaxColumns(Integer nbMaxColumns) {
-    this.nbMaxColumns = nbMaxColumns;
+  public void setDescription(String description) {
+    this.description = description;
   }
 
-  public Set<JavaScript> getJavaScripts() {
+  public List<JavaScript> getJavaScripts() {
     return javaScripts;
   }
 
-  public void setJavaScripts(Set<JavaScript> javaScripts) {
+  public void setJavaScripts(List<JavaScript> javaScripts) {
     this.javaScripts = javaScripts;
   }
 
-  public Set<Css> getCss() {
+  public List<Css> getCss() {
     return css;
   }
 
-  public void setCss(Set<Css> css) {
+  public void setCss(List<Css> css) {
     this.css = css;
   }
 
@@ -68,11 +69,24 @@ public class Dashboard implements Serializable {
     this.lines = lines;
   }
 
-  public String toHTML() throws IOException {
-    ClassLoader classLoader = getClass().getClassLoader();
-    File htmlTemplateFile = new File(classLoader.getResource("template.html").getFile());
+  public List<Group> getGroups() {
+    return groups;
+  }
+
+  public void setGroups(List<Group> groups) {
+    this.groups = groups;
+  }
+
+  public String toHTML(String template) throws IOException {
+    if (template == null) {
+      ClassLoader classLoader = getClass().getClassLoader();
+      template = classLoader.getResource("template.html").getFile();
+    }
+    File htmlTemplateFile = new File(template);
     String htmlString = new String(Files.readAllBytes(htmlTemplateFile.toPath()));
-    htmlString = htmlString.replace("${title}", getName());
+    htmlString = htmlString.replace("${name}", getName());
+    htmlString = htmlString.replace("${title}", getTitle());
+    htmlString = htmlString.replace("${description}", getDescription());
 
     String scripts = javaScripts.stream().map(JavaScript::toHTML).collect(Collectors.joining("\n"));
     htmlString = htmlString.replace("${scripts}", scripts);
@@ -81,19 +95,30 @@ public class Dashboard implements Serializable {
     htmlString = htmlString.replace("${css}", sCss);
 
     String components = lines.stream().map(line -> line.getComponents()
-            .stream().map(Component::toJavaScript)
+            .stream().filter(Component::isComplexeComponent).map(Component::toJavaScript)
             .collect(Collectors.joining("\n\n"))).collect(Collectors.joining("\n\n"));
 
     htmlString = htmlString.replace("${components}", components);
 
-    String listObservables = lines.stream().map(line -> line.getComponents()
-            .stream().map(component -> "observable" + component.getId())
-            .collect(Collectors.joining(", "))).collect(Collectors.joining(", "));
+
+
+    String listObservables = lines.stream().map(line -> line.getComponents()).flatMap(c -> c.stream())
+            .filter(Component::isObservable).map(component -> "observable" + component.getId())
+            .collect(Collectors.joining(", "));
 
     htmlString = htmlString.replace("${listObservables}", listObservables);
 
+    htmlString = htmlString.replace("${groups}", groups.stream().map(Group::toHTML)
+            .collect(Collectors.joining("\n\n")));
+
     htmlString = htmlString.replace("${layout}", lines.stream().map(Line::toHTML)
-            .collect(Collectors.joining("\n\n", "<div class='container'>", "</div>")));
+            .collect(Collectors.joining("\n\n")));
+
+    String listToLoad = lines.stream().map(line -> line.getComponents()).flatMap(c -> c.stream())
+            .filter(Component::isLoadOnStartUp).map(component -> "callServer('" + component.getId() + "', null);")
+            .collect(Collectors.joining("\n"));
+
+    htmlString = htmlString.replace("${load}", listToLoad);
 
     return htmlString;
   }
