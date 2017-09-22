@@ -1,3 +1,8 @@
+function Dataset(name, url) {
+    this.name = name;
+    this.url = url;
+}
+
 function Parameter(name, provider) {
     this.name = name;
     this.provider = provider;

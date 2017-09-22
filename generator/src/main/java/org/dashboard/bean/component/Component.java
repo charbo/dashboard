@@ -1,5 +1,6 @@
 package org.dashboard.bean.component;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dashboard.bean.CustomizableItem;
 import org.dashboard.bean.Line;
 
@@ -15,7 +16,8 @@ public class Component extends CustomizableItem implements Serializable, Compara
   private Integer index;
   private String renderFunction;
   private String event;
-  private String dataset;
+  private Dataset dataset;
+  private boolean loadOnStartUp = false;
 
   private List<String> childs = new ArrayList<>();
 
@@ -55,12 +57,20 @@ public class Component extends CustomizableItem implements Serializable, Compara
     this.event = event;
   }
 
-  public String getDataset() {
+  public Dataset getDataset() {
     return dataset;
   }
 
-  public void setDataset(String dataset) {
+  public void setDataset(Dataset dataset) {
     this.dataset = dataset;
+  }
+
+  public boolean isLoadOnStartUp() {
+    return loadOnStartUp;
+  }
+
+  public void setLoadOnStartUp(boolean loadOnStartUp) {
+    this.loadOnStartUp = loadOnStartUp;
   }
 
   public List<String> getChilds() {
@@ -118,9 +128,9 @@ public class Component extends CustomizableItem implements Serializable, Compara
     String childsArray = childs.stream().map(child -> "'" + child + "'").collect(Collectors.joining(", ", "[", "]"));
     String parametersArray = parameters.stream().map(Parameter::toJavaScript).collect(Collectors.joining(", ", "[", "]"));
     result.append(childsArray);
-    result.append(", '");
-    result.append(dataset != null ? dataset : "");
-    result.append("', ");
+    result.append(", ");
+    result.append(dataset != null ? dataset.toJavaScript() : "''");
+    result.append(", ");
     result.append(parametersArray);
     result.append(", options");
     result.append(id);
@@ -128,7 +138,9 @@ public class Component extends CustomizableItem implements Serializable, Compara
     result.append("\n");
     result.append(addInComponentsArray());
     result.append("\n");
-    result.append(toObservable());
+    if (StringUtils.isNotBlank(event)) {
+      result.append(toObservable());
+    }
 
     return result.toString();
   }
@@ -146,9 +158,9 @@ public class Component extends CustomizableItem implements Serializable, Compara
     return result.toString();
   }
 
-  public String toHTML(int nbCellsInLine) {
+  public String toHTML() {
     StringBuilder html = new StringBuilder();
-    html.append("<div id='").append(id).append("' class='col-md-").append(12/nbCellsInLine).append(getHtmlCss()).append("'>").append("</div>");
+    html.append("<div id='").append(id).append("' class='").append(getCss()).append("'>").append("</div>");
     return html.toString();
   }
 
@@ -157,5 +169,13 @@ public class Component extends CustomizableItem implements Serializable, Compara
     StringBuilder result = new StringBuilder();
     result.append("components['chart").append(id).append("'] = ").append(id).append(";");
     return result.toString();
+  }
+
+  public boolean isObservable() {
+    return StringUtils.isNotBlank(event);
+  }
+
+  public boolean isComplexeComponent() {
+    return StringUtils.isNotBlank(renderFunction);
   }
 }

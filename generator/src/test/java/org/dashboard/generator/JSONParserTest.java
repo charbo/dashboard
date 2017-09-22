@@ -1,9 +1,11 @@
 package org.dashboard.generator;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.dashboard.bean.Group;
 import org.dashboard.bean.component.Component;
 import org.dashboard.bean.Dashboard;
 import org.dashboard.bean.Line;
+import org.dashboard.bean.component.Dataset;
 import org.dashboard.bean.component.Option;
 import org.junit.jupiter.api.Test;
 
@@ -23,10 +25,21 @@ class JSONParserTest {
     File file = new File(classLoader.getResource("dashboard.json").getFile());
     Dashboard dashboard = new JSONParser().parseJSon(file);
     assertNotNull(dashboard);
+    assertEquals("name", dashboard.getName());
+    assertEquals("title", dashboard.getTitle());
+    assertEquals("une description héhé", dashboard.getDescription());
     assertNotNull(dashboard.getJavaScripts());
     assertEquals(1, dashboard.getJavaScripts().size());
     assertNotNull(dashboard.getCss());
     assertEquals(1, dashboard.getCss().size());
+
+    assertNotNull(dashboard.getGroups());
+    assertEquals(2, dashboard.getGroups().size());
+    Group group = dashboard.getGroups().iterator().next();
+    assertEquals("line1", group.getLinkedId());
+    assertEquals("Titre 1", group.getLabel());
+
+
     assertNotNull(dashboard.getLines());
     assertEquals(2, dashboard.getLines().size());
     Iterator<Line> iterator = dashboard.getLines().iterator();
@@ -42,7 +55,10 @@ class JSONParserTest {
     assertEquals("renderComponent1", component.getRenderFunction());
     assertNotNull(component.getCss());
     assertEquals("cssComponent1", component.getCss());
-    assertEquals("dataset11", component.getDataset());
+    Dataset dataset11 = component.getDataset();
+    assertNotNull(dataset11);
+    assertEquals("dataset11", dataset11.getName());
+    assertEquals("url11", dataset11.getUrl());
     assertTrue(CollectionUtils.isNotEmpty(component.getParameters()));
     assertEquals(2, component.getParameters().size());
     assertEquals("name1", component.getParameters().get(0).getName());

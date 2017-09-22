@@ -101,6 +101,9 @@ public class Dashboard implements Serializable {
     htmlString = htmlString.replace("${components}", components);
 
 
+    String listObservablesBof = lines.stream().map(
+            line -> line.getComponents().stream().map(component -> "observable" + component.getId()).collect(Collectors.joining(", "))
+    ).collect(Collectors.joining(", "));
 
     String listObservables = lines.stream().map(line -> line.getComponents()).flatMap(c -> c.stream())
             .filter(Component::isObservable).map(component -> "observable" + component.getId())

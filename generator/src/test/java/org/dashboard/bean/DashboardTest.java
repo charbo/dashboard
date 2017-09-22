@@ -243,7 +243,7 @@ class DashboardTest {
 
     dashboard.setLines(lines);
 
-    String html = dashboard.toHTML();
+    String html = dashboard.toHTML(null);
     assertNotNull(html);
     assertEquals(result, html);
 

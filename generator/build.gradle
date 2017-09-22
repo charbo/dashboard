@@ -1,0 +1,11 @@
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.dashboard.Main'
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+

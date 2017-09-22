@@ -1,4 +1,4 @@
-ext.junitJupiterVersion = '5.0.0-M4'
+ext.junitJupiterVersion = '5.0.0-M3'
 
 buildscript {
     repositories {
@@ -41,8 +41,13 @@ subprojects {
         compile 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
 
         // JUnit Jupiter API and TestEngine implementation
-        testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
-        testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+        //testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+        //testRuntime("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+
+        testRuntime("org.junit.platform:junit-platform-launcher:1.0.0")
+        testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0")
+        testRuntime("org.junit.vintage:junit-vintage-engine:4.12.0")
+        testCompile("org.mockito:mockito-all:1.8.5")
 
     }
 }
