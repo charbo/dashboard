@@ -1,15 +1,21 @@
 [
   {
     "category": "CAT1",
-    "status": "status1"
+    "status": "status1",
+    "date": "2017-06-05",
+    "duration": "PT02H00M00S"
   },
   {
     "category": "CAT1",
-    "status": "status1"
+    "status": "status1",
+    "date": "2017-02-03",
+    "duration": "PT02H30M00S"
   },
   {
     "category": "CAT2",
-    "status": "status2"
+    "status": "status2",
+    "date": "2017-02-03",
+    "duration": "PT03H00M00S"
   }
 ]
 

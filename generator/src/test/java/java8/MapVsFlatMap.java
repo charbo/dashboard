@@ -1,7 +1,7 @@
-package org.dashboard.java8;
+package java8;
 
-import demo.bean.Enfant;
-import demo.bean.Parent;
+import java8.bean.Enfant;
+import java8.bean.Parent;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

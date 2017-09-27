@@ -4,3 +4,16 @@
 *.class
 **.class
 **.iml
+/generator/build/classes/main/org/dashboard/bean/component/Component.class
+/generator/build/classes/main/org/dashboard/bean/Css.class
+/generator/build/classes/main/org/dashboard/bean/CustomizableItem.class
+/generator/build/classes/main/org/dashboard/bean/Dashboard.class
+/generator/build/classes/main/org/dashboard/bean/Function.class
+/generator/build/classes/main/org/dashboard/bean/HeaderElement.class
+/generator/build/classes/main/org/dashboard/bean/JavaScript.class
+/generator/build/classes/main/org/dashboard/bean/Line.class
+/generator/build/classes/main/org/dashboard/Test1.class
+/generator/build/libs/generator.jar
+/server/build/classes/main/org/dashboard/server/DatasProvider.class
+/server/build/libs/server.jar
+/server/build/libs/server.jar.original

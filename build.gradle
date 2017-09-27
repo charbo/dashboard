@@ -39,6 +39,8 @@ subprojects {
         compile 'org.apache.commons:commons-lang3:3.4'
         compile 'org.apache.commons:commons-collections4:4.1'
         compile 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
+        compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.5'
+        compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.5'
 
         // JUnit Jupiter API and TestEngine implementation
         //testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
@@ -48,6 +50,5 @@ subprojects {
         testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0")
         testRuntime("org.junit.vintage:junit-vintage-engine:4.12.0")
         testCompile("org.mockito:mockito-all:1.8.5")
-
     }
 }

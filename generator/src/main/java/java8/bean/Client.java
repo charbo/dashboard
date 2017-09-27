@@ -1,4 +1,4 @@
-package demo.bean;
+package java8.bean;
 
 public class Client {
 

@@ -1,7 +1,6 @@
-package demo;
+package java8;
 
-import demo.bean.Client;
-import org.junit.jupiter.api.BeforeAll;
+import java8.bean.Client;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -31,21 +30,21 @@ class LabelServiceTest {
 
   @Test public void
   client_is_unknown() {
-    when(clientAdapter.getClientReferecneByCommande(ID_COMMANDE)).thenReturn(null);
+    when(clientAdapter.getClientReferenceByCommande(ID_COMMANDE)).thenReturn(null);
     String label = labelService.getLabelClientNumber(ID_COMMANDE);
     assertEquals("Non communiqué", label);
   }
 
   @Test public void
   client_s_number_is_unknown() {
-    when(clientAdapter.getClientReferecneByCommande(ID_COMMANDE)).thenReturn(new Client());
+    when(clientAdapter.getClientReferenceByCommande(ID_COMMANDE)).thenReturn(new Client());
     String label = labelService.getLabelClientNumber(ID_COMMANDE);
     assertEquals("Non communiqué", label);
   }
 
   @Test public void
   client_s_number_is_known() {
-    when(clientAdapter.getClientReferecneByCommande(ID_COMMANDE)).thenReturn(new Client(NUMBER));
+    when(clientAdapter.getClientReferenceByCommande(ID_COMMANDE)).thenReturn(new Client(NUMBER));
     String label = labelService.getLabelClientNumber(ID_COMMANDE);
     assertEquals(NUMBER, label);
   }

@@ -1,10 +1,10 @@
-package org.dashboard.java8;
+package java8;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dashboard.OrderPrefixe;
-import demo.bean.Client;
-import demo.bean.Enfant;
-import demo.bean.Parent;
+import java8.bean.Client;
+import java8.bean.Enfant;
+import java8.bean.Parent;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;

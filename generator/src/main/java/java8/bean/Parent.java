@@ -1,4 +1,4 @@
-package demo.bean;
+package java8.bean;
 
 import java.util.ArrayList;
 import java.util.List;
