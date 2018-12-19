@@ -4,15 +4,17 @@ package org.dashboard.server.configuration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.*;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
-@Configuration
+@org.springframework.context.annotation.Configuration
 @PropertySources({
         @PropertySource("classpath:application.properties"),
         @PropertySource(value = "classpath:dashboard.properties", ignoreResourceNotFound=true)
 })
-public class DataBaseConfiguration {
+@EnableTransactionManagement
+public class Configuration {
 
   @ConfigurationProperties(prefix = "spring.datasource")
   @Bean
