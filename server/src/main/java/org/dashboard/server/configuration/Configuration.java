@@ -13,14 +13,7 @@ import javax.sql.DataSource;
         @PropertySource("classpath:application.properties"),
         @PropertySource(value = "classpath:dashboard.properties", ignoreResourceNotFound=true)
 })
-@EnableTransactionManagement
+//@EnableTransactionManagement
 public class Configuration {
 
-  @ConfigurationProperties(prefix = "spring.datasource")
-  @Bean
-  @Primary
-  public DataSource dataSource() {
-    return DataSourceBuilder.create()
-            .build();
-  }
 }

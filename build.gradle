@@ -4,12 +4,10 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
-        maven { url 'http://maven2.rd.francetelecom.fr/proxy/repository/public' }
     }
     dependencies {
         classpath 'io.spring.gradle:dependency-management-plugin:0.5.7.RELEASE'
         classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE'
-        classpath 'no.nils:wsdl2java:0.10'
     }
 
 }
@@ -41,6 +39,7 @@ subprojects {
         compile 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
         compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.5'
         compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.5'
+
 
         // JUnit Jupiter API and TestEngine implementation
         //testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")

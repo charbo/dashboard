@@ -2,46 +2,55 @@
   {
     "name": "select",
     "sql": "SELECT key, value FROM datas",
-    "series": ["select"]
+    "series": ["select"],
+    "source": "sakila"
   },
   {
     "name": "category",
     "sql": "SELECT cat.name as 'key', count(*) as value FROM rental r inner join inventory i on i.inventory_id = r.inventory_id inner join film_category c on c.film_id = i.film_id inner join category cat on cat.category_id = c.category_id where MONTHNAME(rental_date) = ':month' group by cat.name",
-    "series": ["category"]
+    "series": ["category"],
+    "source": "sakila"
   },
   {
     "name": "bar",
     "sql": "SELECT key, value FROM datas where key in (':select', ':pie')",
-    "series": ["données bar"]
+    "series": ["données bar"],
+    "source": "sakila"
   },
   {
     "name": "names",
     "sql": "SELECT last_name as 'key', 1 as value FROM customer",
-    "series": ["noms"]
+    "series": ["noms"],
+    "source": "sakila"
   },
   {
     "name": "amount",
     "sql": "SELECT MONTHNAME(payment_date) as 'key', sum(amount) as value FROM payment p inner join customer c on c.customer_id = p.customer_id where c.last_name = ':name' group by MONTHNAME(payment_date) order by MONTH(payment_date)",
-    "series": ["amount"]
+    "series": ["amount"],
+    "source": "sakila"
   },
   {
     "name": "rental",
     "sql": "SELECT 'less2' AS serie, mname AS 'key', sum(cc) AS value FROM (SELECT MONTHNAME(rental_date) AS mname, customer_id, COUNT(*) as cc FROM rental GROUP BY MONTHNAME(rental_date) , customer_id HAVING COUNT(*) <= 2 ORDER BY MONTH(rental_date)) VIEW GROUP BY mname UNION SELECT 'less5' AS serie, mname AS 'key', sum(cc) AS value FROM (SELECT MONTHNAME(rental_date) AS mname, customer_id, COUNT(*) as cc FROM rental GROUP BY MONTHNAME(rental_date) , customer_id HAVING COUNT(*) < 5 and COUNT(*) > 2 ORDER BY MONTH(rental_date)) VIEW GROUP BY mname UNION SELECT 'more5' AS serie, mname AS 'key', sum(cc) AS value FROM (SELECT MONTHNAME(rental_date) AS mname, customer_id, COUNT(*) as cc FROM rental GROUP BY MONTHNAME(rental_date) , customer_id HAVING COUNT(*) >= 5 ORDER BY MONTH(rental_date)) VIEW GROUP BY mname",
-    "series": ["less2", "less5", "more5"]
+    "series": ["less2", "less5", "more5"],
+    "source": "sakila"
   },
   {
     "name": "month",
     "sql": "SELECT 'key', avg(cc) as value from ( select customer_id, count(*) as cc FROM rental where MONTHNAME(rental_date) = ':month' group by customer_id order by customer_id) as VIEW",
-    "series": ["month"]
+    "series": ["month"],
+    "source": "sakila"
   },
   {
     "name": "payment",
     "sql": "SELECT MONTHNAME(payment_date) as 'key', sum(amount) as value FROM sakila.payment group by MONTHNAME(payment_date) order by MONTH(payment_date);",
-    "series": ["payment"]
+    "series": ["payment"],
+    "source": "sakila"
   },
   {
     "name": "paymentdays",
     "sql": "SELECT DAYNAME(payment_date) as 'key', sum(amount) as value FROM sakila.payment where MONTHNAME(payment_date) = ':month' group by DAYNAME(payment_date) order by DAYOFWEEK(payment_date);",
-    "series": ["paymentbydays"]
+    "series": ["paymentbydays"],
+    "source": "sakila"
   }
 ]
