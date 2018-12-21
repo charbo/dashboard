@@ -1,3 +1,5 @@
 rootProject.name = 'dashboard'
+include 'domain'
 include 'generator'
 include 'server'
+include 'backoffice'
