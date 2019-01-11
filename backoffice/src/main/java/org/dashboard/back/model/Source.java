@@ -1,15 +1,16 @@
 package org.dashboard.back.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 public class Source implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "source_id_seq")
+    @SequenceGenerator(name="source_id_seq", sequenceName = "SOURCE_ID_SEQ", allocationSize = 100)
     private Long id;
     private String name;
     private String driver;
