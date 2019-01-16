@@ -1,0 +1,45 @@
+{
+  "name": "sample",
+  "nbLines": "2",
+  "nbMaxColumns": "2",
+  "javaScripts": [
+    {
+      "url": "monjs.js"
+    }
+  ],
+  "lines" : [
+    {
+      "id" : "line1",
+      "index": "1",
+      "nbColumns" : "1",
+      "components" : [
+        {
+          "id" : "component1",
+          "index" : "1",
+          "renderFunction" : {"name" : "renderComponent1", "arguments" : ["datasetname", "component1"]},
+          "refreshFunction" : {"name" : "refreshComponent1"},
+          "childs" : ["component2", "component3"]
+        }
+      ]
+    },
+    {
+      "id" : "line2",
+      "index": "2",
+      "nbColumns" : "2",
+      "components" : [
+        {
+          "id" : "component2",
+          "index" : "1",
+          "renderFunction" : {"name" : "renderComponent2"},
+          "refreshFunction" : {"name" : "refreshComponent2"}
+        },
+        {
+          "id" : "component3",
+          "index" : "2",
+          "renderFunction" : {"name" :"renderComponent3"},
+          "refreshFunction" : {"name" :"refreshComponent3"}
+        }
+      ]
+    }
+  ]
+}

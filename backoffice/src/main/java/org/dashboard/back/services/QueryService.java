@@ -2,6 +2,7 @@ package org.dashboard.back.services;
 
 import org.dashboard.back.dto.QueryDTO;
 import org.dashboard.back.model.Parameter;
+import org.dashboard.back.model.ParameterDTO;
 import org.dashboard.back.model.Query;
 import org.dashboard.back.model.Source;
 import org.dashboard.back.repository.QueryRepository;
@@ -34,10 +35,10 @@ public class QueryService {
         query.setSql(queryDTO.getSql());
         query.setSourceId(source.getId());
 
-        for (String serie : queryDTO.getSeries()) {
+        for (ParameterDTO param : queryDTO.getParameters()) {
             Parameter parameter = new Parameter();
-            parameter.setName(serie);
-            parameter.setDefaultValue("default");
+            parameter.setName(param.getKey());
+            parameter.setDefaultValue(param.getValue());
             query.addParameter(parameter);
         }
 

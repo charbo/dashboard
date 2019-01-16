@@ -1,5 +1,7 @@
 package org.dashboard.back.dto;
 
+import org.dashboard.back.model.ParameterDTO;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
@@ -8,7 +10,8 @@ public class QueryDTO implements Serializable {
 
     private String name;
     private String sql;
-    private String[] series;
+    private boolean multiSeries;
+    private ParameterDTO[] parameters = new ParameterDTO[]{};
     private String source;
 
     public String getName() {
@@ -27,12 +30,20 @@ public class QueryDTO implements Serializable {
         this.sql = sql;
     }
 
-    public String[] getSeries() {
-        return series;
+    public boolean isMultiSeries() {
+        return multiSeries;
     }
 
-    public void setSeries(String[] series) {
-        this.series = series;
+    public void setMultiSeries(boolean multiSeries) {
+        this.multiSeries = multiSeries;
+    }
+
+    public ParameterDTO[] getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(ParameterDTO[] parameters) {
+        this.parameters = parameters;
     }
 
     public String getSource() {
@@ -50,14 +61,13 @@ public class QueryDTO implements Serializable {
         QueryDTO queryDTO = (QueryDTO) o;
         return Objects.equals(name, queryDTO.name) &&
                 Objects.equals(sql, queryDTO.sql) &&
-                Arrays.equals(series, queryDTO.series) &&
                 Objects.equals(source, queryDTO.source);
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hash(name, sql, source);
-        result = 31 * result + Arrays.hashCode(series);
+        result = 31 * result;
         return result;
     }
 }
