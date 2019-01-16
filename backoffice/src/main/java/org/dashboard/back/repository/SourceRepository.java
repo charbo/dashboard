@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SourceRepository extends JpaRepository<Source, Long> {
+    Source findByName(String name);
 }

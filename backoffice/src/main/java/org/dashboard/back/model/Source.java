@@ -1,11 +1,11 @@
 package org.dashboard.back.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+
+//TODO add dateupdate
 @Entity
 public class Source implements Serializable {
     @Id
@@ -17,6 +17,14 @@ public class Source implements Serializable {
     private String user;
     private String password;
     private String url;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
