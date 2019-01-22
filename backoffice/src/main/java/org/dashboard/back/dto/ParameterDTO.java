@@ -1,7 +1,5 @@
-package org.dashboard.back.model;
+package org.dashboard.back.dto;
 
-import javax.persistence.*;
-import java.util.Objects;
 
 public class ParameterDTO implements java.io.Serializable {
     private String key;

@@ -1,8 +1,8 @@
 package org.dashboard.back.services;
 
+import org.dashboard.back.dto.ParameterDTO;
 import org.dashboard.back.dto.QueryDTO;
 import org.dashboard.back.model.Parameter;
-import org.dashboard.back.model.ParameterDTO;
 import org.dashboard.back.model.Query;
 import org.dashboard.back.model.Source;
 import org.dashboard.back.repository.QueryRepository;
@@ -34,6 +34,7 @@ public class QueryService {
         query.setName(queryDTO.getName());
         query.setSql(queryDTO.getSql());
         query.setSourceId(source.getId());
+        query.setMultiSeries(queryDTO.isMulti());
 
         for (ParameterDTO param : queryDTO.getParameters()) {
             Parameter parameter = new Parameter();
@@ -53,7 +54,16 @@ public class QueryService {
         QueryDTO dto = new QueryDTO();
         dto.setName(query.getName());
         dto.setSql(query.getSql());
-        dto.setSource(this.sourceRepository.findOne(query.getId()).getName());
+        dto.setSource(this.sourceRepository.findOne(query.getSourceId()).getName());
+        dto.setMulti(query.isMultiSeries());
+
+        for (Parameter param : query.getParameters()) {
+            ParameterDTO parameter = new ParameterDTO();
+            parameter.setKey(param.getName());
+            parameter.setValue(param.getDefaultValue());
+            dto.addParameter(parameter);
+        }
+
         return dto;
     }
 }

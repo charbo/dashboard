@@ -1,17 +1,17 @@
 package org.dashboard.back.dto;
 
-import org.dashboard.back.model.ParameterDTO;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class QueryDTO implements Serializable {
 
     private String name;
     private String sql;
-    private boolean multiSeries;
-    private ParameterDTO[] parameters = new ParameterDTO[]{};
+    private boolean multi;
+    private List<ParameterDTO> parameters = new ArrayList<>();
     private String source;
 
     public String getName() {
@@ -30,19 +30,21 @@ public class QueryDTO implements Serializable {
         this.sql = sql;
     }
 
-    public boolean isMultiSeries() {
-        return multiSeries;
+    public boolean isMulti() {
+        return multi;
     }
 
-    public void setMultiSeries(boolean multiSeries) {
-        this.multiSeries = multiSeries;
+    public void setMulti(boolean multi) {
+        this.multi = multi;
     }
 
-    public ParameterDTO[] getParameters() {
+    //TODO clone
+    public List<ParameterDTO> getParameters() {
         return parameters;
     }
 
-    public void setParameters(ParameterDTO[] parameters) {
+    //TODO clone
+    public void setParameters(List<ParameterDTO> parameters) {
         this.parameters = parameters;
     }
 
@@ -69,5 +71,9 @@ public class QueryDTO implements Serializable {
         int result = Objects.hash(name, sql, source);
         result = 31 * result;
         return result;
+    }
+
+    public void addParameter(ParameterDTO parameter) {
+        this.parameters.add(parameter);
     }
 }

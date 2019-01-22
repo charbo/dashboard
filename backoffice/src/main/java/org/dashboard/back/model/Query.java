@@ -15,6 +15,7 @@ public class Query implements Serializable {
     private String name;
     private String sql;
     private Long sourceId;
+    private boolean multiSeries;
 
     @OneToMany(mappedBy = "query", cascade = CascadeType.ALL)
     private List<Parameter> parameters = new ArrayList<>();
@@ -49,6 +50,22 @@ public class Query implements Serializable {
 
     public void setSourceId(Long sourceId) {
         this.sourceId = sourceId;
+    }
+
+    public boolean isMultiSeries() {
+        return multiSeries;
+    }
+
+    public void setMultiSeries(boolean multiSeries) {
+        this.multiSeries = multiSeries;
+    }
+
+    public List<Parameter> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(List<Parameter> parameters) {
+        this.parameters = parameters;
     }
 
     @Override

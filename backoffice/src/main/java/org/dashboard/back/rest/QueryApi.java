@@ -23,7 +23,7 @@ public class QueryApi {
     }
 
 
-    //TODO add a filter
+    //TODO add a filter on user id for example
     @RequestMapping(value = "/query",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET)
